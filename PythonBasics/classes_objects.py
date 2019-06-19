@@ -34,6 +34,7 @@ print("Are player one and two the same? " , same_player)
 same_name = player_one.name == player_two.name
 print("Do the players have the same name? ", same_name, '\n')
 
+################################################################################
 
 #Class for a student object
 class Student:
@@ -48,9 +49,38 @@ class Student:
         average = grades / numOfClasses
         return average
 
+    #Using self as a parameter
+    def go_to_my_school(self):
+        print("I go to {}".format(self.school))
+
+    #Using the class as a parameter, instead of an instance of an object
+    @classmethod
+    #cls: It's the class Student being passed down as a parameter
+    def go_to_school(cls):
+        print("I'm going to school")
+
+    #Use static decorator if you don't want to use cls or self
+    @staticmethod
+    def go_to_school_static():
+        print("I'm going to school")
+
+
+        
+
 edwin = Student("Edwin", "Hunter College")
 edwin.marks.append(98)
 print(edwin.name)
 print(edwin.school)
 print(edwin.marks)
 print("Average: ", edwin.avg())
+#If the method has no classmethod decorator, then we use edwin.
+edwin.go_to_my_school()
+#If we use the classmethod decorator, then we can use edwin or Student
+edwin.go_to_school()
+Student.go_to_school()
+#If we use the staticmethod decorator, then we use edwin or Student
+edwin.go_to_school_static()
+Student.go_to_school_static()
+
+#Whenever we use object.method(), the self of the object gets passed by default
+#with no need to declare it
