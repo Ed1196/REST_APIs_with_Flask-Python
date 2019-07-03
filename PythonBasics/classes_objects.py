@@ -5,9 +5,10 @@ lottery_player_dict = {
 }
 
 #Classes are blueprints of what an object can have, but unlike Dictionaries
-#Each individual object can it's own identity
+#Each individual object can have it's own identity
 class lotteryPlayer:
-    #Self is auto-generated for us
+    #Self is auto-generated for us, will refeere to the object who was created.
+    #ariel and edwin are both of type lotteryPlayer, but will have different values.
     def __init__(self, name):
         self.name = name
         self.numbers = ()
@@ -65,7 +66,7 @@ class Student:
         print("I'm going to school")
 
 
-        
+
 
 edwin = Student("Edwin", "Hunter College")
 edwin.marks.append(98)

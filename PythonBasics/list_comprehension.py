@@ -2,7 +2,7 @@ my_list = [0, 1, 2, 3, 4]
 
 #Different way of creating a list
 #A 'for' loop will
-an_equal_list = [x for x in range(5)] #an_equal_list = [0, 1, 2, 3]
+an_equal_list = [x for x in range(5)] #an_equal_list = [0, 1, 2, 3, 4]
 print(an_equal_list)
 
 #List that will create a list from num from a range from 0 to 9 and to the power of 2
@@ -18,13 +18,17 @@ people_you_know = ["Edwin", "Ariel", "Jack"]
 cleaned_list_name = [name.strip().lower() for name in people_you_know]
 print(cleaned_list_name)
 
+#Filtering out a name from a list
+people_you_know  = list(filter(lambda x: x != 'Ariel', people_you_know))
+print(people_you_know)
+
 #Simplifying if_statement.py with list comprehension
 ######--METHODS--#####
 def who_do_you_know():
     #Ask for a user for a list of people they known people
-    list_people = input("Enter list of names separate it with a space: ")
+    list_people = input("Enter list of names separate it with a ,: ")
 
-    #Split the list by ",", remove unneccessary whitespaces and make everything lowercase 
+    #Split the list by ",", remove unneccessary whitespaces and make everything lowercase
     list_cleaned = [name.strip().lower() for name in list_people.split(",")]
 
     return list_cleaned

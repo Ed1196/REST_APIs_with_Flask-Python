@@ -27,7 +27,7 @@ def what_are_kwargs(*args, **kwargs):
     print(kwargs)
     print(kwargs['name'])
     print(kwargs['location'])
-
+                    #    *args               **kwargs
 print( what_are_kwargs(12, 34, 52, name = "Edwin", location = "US") )
 
 #Simplifying the Inheritance student
