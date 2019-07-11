@@ -81,6 +81,13 @@ class UserRegister(Resource):
     def post(self):
         #We store the data that we parsed into a variable
         data = UserRegister.parser.parse_args()
+
+        #Check if user already exists: Use the findByUserName method from User
+        if(User.findByUserName(data['username']) ):
+            return {'message':'User already exists'}, 409
+
+
+
         #Init connection to the database
         connection = sqlite3.connect('data.db')
         #Create a cursor that will allow us to traverse the database
@@ -88,7 +95,7 @@ class UserRegister(Resource):
 
         #Since the id is auto-incremented, we must type NULL
         create_user = "INSERT INTO users VALUES(NULL,?,?)"
-        #We use the data from the parser to create a bew user
+        #We use the data from the parser to create a new user
         cursor.execute(create_user, (data['username'], data['password']) )
 
         connection.commit()
