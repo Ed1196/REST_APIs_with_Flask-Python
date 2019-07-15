@@ -2,8 +2,6 @@ import sqlite3
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
 
-items =[]
-
 #Item becomes a class with the Resource class properties due to inheritance
 #This is a resource that is only allowed to be accessed via GET
 #404: Not found
@@ -19,12 +17,18 @@ class Item(Resource):
         type=float,
         required=True,
         help='This field cannot be left blank!')
+    parser.add_argument('name',
+        type=str
+        )
 
     #Forces authentication before we reach the get method, will call the 'identity()' method from security
     @jwt_required()
     def get(self, name):
         #THIS IS ALL THE SET UP NEEDED TO RETRIEVE AN ITEM FROM THE DB
-        item = self.find_by_name(name)
+        try:
+            item = self.find_by_name(name)
+        except:
+            return {'message':'An error occurred finding an item!'}
 
         if item is not None:
             return item
@@ -48,8 +52,11 @@ class Item(Resource):
 
         #Create a JSON of the item
         item = {'name':name, 'price':data['price']}
-        self.insert(item)
 
+        try:
+            self.insert(item)
+        except:
+            return {'message':'An error occurred inserting the item!'}, 500 #Internal Server Error
 
         return item, 201
 
@@ -76,16 +83,24 @@ class Item(Resource):
         # data will have the fields needed to create an item; data['price'] for example
         #depricated by reqparse: data = request.get_json()
         data = Item.parser.parse_args()
-
+        item = {'name':name, 'price':data['price']}
         #next will return the first item that has the same name as the paremeter passed down when the endpoint is called
         #filter will iterate over items and do function x['name'] == name for all items on the items list
-        item = next(filter(lambda x: x['name'] == name,items), None)
-        if item is None:
-            item = {'name':name, 'price':data['price']}
-            items.append(item)
+        try:
+            result = self.find_by_name(name)
+        except:
+            return {'message': 'An error ocurred finding the item!'} , 500
+
+        if result is None:
+            try:
+                self.insert(item)
+            except:
+                return {'message': 'An error ocurred inserting the item!'}, 500
         else:
-            item.update(data)
+            self.update_item(item)
+
         return item
+
 
     @classmethod
     def find_by_name(cls, name):
@@ -97,6 +112,16 @@ class Item(Resource):
 
         if row is not None:
             return {'item': {'name': row[0],'price': row[1] }}
+
+    @classmethod
+    def update_item(cls, item):
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+        update_item = "UPDATE items SET price=? WHERE name=?"
+
+        cursor.execute(update_item,( item['price'], item['name'] ))
+        connection.commit()
+        connection.close()
 
     @classmethod
     def insert(cls, item):
@@ -117,11 +142,10 @@ class ItemList(Resource):
         cursor = connection.cursor()
         return_items = "SELECT * FROM items"
         result = cursor.execute(return_items)
-        row = result.fetch()
-        if row is not None:
-            items = cls(*row)
-        else:
-            user=None
+        item_list = []
+
+        for row in result:
+            item_list.append({'name': row[0],'price': row[1]} )
 
         connection.close()
-        return items
+        return {'Items': item_list }
