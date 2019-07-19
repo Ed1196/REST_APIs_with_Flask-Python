@@ -3,6 +3,7 @@ from db import db
 # db.Model: Extends db, tells sqlAlchemy entity that ItemModel
 # will be an object that will be stored in a database.
 class ItemModel(db.Model):
+    
     __tablename__ = "items"
 
     #Items local colums
