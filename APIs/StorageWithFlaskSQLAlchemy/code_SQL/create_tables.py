@@ -6,7 +6,7 @@ coursor = connection.cursor()
 #Query for the table that needs to be made
 #id has to be auto-incremented via 'INTEGER PRIMARY KEY'
 create_users_table = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username text, password text)"
-create_items_table = "CREATE TABLE IF NOT EXISTS items (name text, price real)"
+create_items_table = "CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY,     name text,    price real)"
 
 
 coursor.execute(create_users_table)
